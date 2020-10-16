@@ -10,12 +10,9 @@ This code is also a good learning resource for researcher/students interested in
 
 
 @article{CheXclusion_2020,
-
-  title={CheXclusion: Fairness gaps in deep chest X-ray classifiers},
-  
+  title={CheXclusion: Fairness gaps in deep chest X-ray classifiers},  
   author={Seyyed-Kalantari, Laleh and Liu, Guanxiong and McDermott, Matthew and Chen, Irene and Marzyeh, Ghassemi},
-  
   BOOKTITLE = {Pacific Symposium on Biocomputing},
-  
+ 
   year={2021}
 }
