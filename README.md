@@ -1,6 +1,6 @@
 # CheXclusion: Fairness gaps in deep chest X-ray classifiers
 
-This is the code for 'CheXclusion: Fairness gaps in deep chest X-ray classifiers' (https://arxiv.org/abs/2003.00827) paper accepted in 'PSB 2021'.
+This is the code for the paper **'CheXclusion: Fairness gaps in deep chest X-ray classifiers' (https://arxiv.org/abs/2003.00827)** accepted in 'PSB 2021'.
 
 In this paper, we examine the extent to which state-of-the-art deep learning classifiers trained to yield diagnostic labels from X-ray images are biased with respect to protected attributes, such as patient sex, age, race, and insurance type as a proxy for socioeconomic status. In particular, we examine the differences in true positive rate (TPR) across different subgroups per attributes. A high TPR disparity indicates that sick members of a protected subgroup would not be given correct diagnoses---e.g., true positives---at the same rate as the general population, even in an algorithm with high overall accuracy. 
 
