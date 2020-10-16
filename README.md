@@ -6,9 +6,9 @@ In this paper, we examine the extent to which state-of-the-art deep learning cla
 
 We train convolution neural networks to predict 14 diagnostic labels in 3 prominent public chest X-ray datasets: MIMIC-CXR (MIMIC), Chest-Xray8 (NIH), CheXpert (CXP), as well as a multi-site aggregation of all those datasets (ALLData). 
 
-This code is also a good learning resource for researcher/students interested in training multi-label medical image pathology classifiers. 
+**This code is also a good learning resource for researcher/students interested in training multi-label medical image pathology classifiers.** 
 
-
+Citation in Bibtex format:
 @article{CheXclusion_2020,
   title={CheXclusion: Fairness gaps in deep chest X-ray classifiers},  
   author={Seyyed-Kalantari, Laleh and Liu, Guanxiong and McDermott, Matthew and Chen, Irene and Marzyeh, Ghassemi},
