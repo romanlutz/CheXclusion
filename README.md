@@ -8,7 +8,7 @@ We train convolution neural networks to predict 14 diagnostic labels in 3 promin
 
 **This code is also a good learning resource for researcher/students interested in training multi-label medical image pathology classifiers.** 
 
-Citation in Bibtex format:
+**Citation in Bibtex format:**
 
 @article{CheXclusion_2020,
   title={CheXclusion: Fairness gaps in deep chest X-ray classifiers},  
