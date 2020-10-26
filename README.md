@@ -20,13 +20,15 @@ Citation in Bibtex format:
 
 ----------------------------------------------------------------------------------------------------------------------------
 ## Steps of runing code:
-0 - Install the f1.yml environment. 1 - Train your network using "MODE = train" in main.py --> the trained model will be saved as Checkpoint in results folder.
+0 - Install the f1.yml environment. 
+
+1 - Train your network using "MODE = train" in main.py --> the trained model will be saved as Checkpoint in results folder.
 
 Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed. Finally, for all the results presented in the paper we average the results of 5 run and get the confidence interval (CI) and report them. Thus for the results we want to report such as AUCs, TPR disparities, FPRs, etc, when we are generating them it is essencial to remane them such that the name contain the run number. Later we use this naming protocol to gather and averaging the resilts over 5 run. At each section we wrote a guidline about what csv files needed to be raname and how.
 
 2 - Test your network using "MODE = test" and runing main.py
 
-    The following csv files are generated: Eval.csv :contain AUC on validation set and TestEval.csv : The AUC on test set for the model True.csv : The true labels on Test set preds.csv : The probability of each disease per image bipred.csv : The binary prediction of each label Threshold.csv : The thereshold utilized to get binary predictions from probabilities per disease. It is calculated based on maximizing f1 score on validation set.
+The following csv files are generated: a) Eval.csv (contain AUC on validation set)  b)TestEval.csv (The AUC on test set for the model) c) True.csv (The true labels on Test set) d) preds.csv (The probability of each disease per image)  e) bipred.csv (The binary prediction of each label) f) Threshold.csv (The thereshold utilized to get binary predictions from probabilities per disease. It is calculated based on maximizing f1 score on validation set)
 
 Rename TestEval.csv to Evel*.csv, where * is the number of run (e.g Evel1.csv for run1).
 
