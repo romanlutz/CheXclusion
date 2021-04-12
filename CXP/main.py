@@ -6,12 +6,12 @@ from predictions import *
 import pandas as pd
 from plot import *
 
-path_image = "/scratch/gobi2/projects/ml4h/datasets/CheXpert"
+path_image = "../../100_CXP_patients"
 
 
-train_df_path ="/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_train.csv"
-test_df_path ="/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_test.csv"
-val_df_path = "/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_valid.csv"
+train_df_path ="../../split_CXP/split_32/train_32.csv"
+test_df_path ="../../split_CXP/split_32/test_32.csv"
+val_df_path = "../../split_CXP/split_32/valid.csv"
 
 # diseases = ['Airspace Opacity', 'Atelectasis', 'Cardiomegaly',
 #        'Consolidation', 'Edema', 'Enlarged Cardiomediastinum', 'Fracture',
