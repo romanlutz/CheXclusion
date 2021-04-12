@@ -1,4 +1,4 @@
-# CheXclusion: Fairness gaps in deep chest X-ray classifiers!
+# CheXclusion: Fairness gaps in deep chest X-ray classifiers
 
 This is the code for the paper **'CheXclusion: Fairness gaps in deep chest X-ray classifiers' (https://arxiv.org/abs/2003.00827)** accepted in 'PSB 2021'.
 
