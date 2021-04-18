@@ -6,12 +6,12 @@ from predictions import *
 import pandas as pd
 from plot import *
 
-path_image = "../../100_CXP_patients"
+path_image = "../.."
 
 
-train_df_path ="../../split_CXP/split_32/train_32.csv"
-test_df_path ="../../split_CXP/split_32/test_32.csv"
-val_df_path = "../../split_CXP/split_32/valid.csv"
+train_df_path = "../../split_CXP/split_32/train_32.csv"
+test_df_path = "../../split_CXP/split_32/test_32.csv"
+val_df_path = "../../split_CXP/split_32/valid_32.csv"
 
 # diseases = ['Airspace Opacity', 'Atelectasis', 'Cardiomegaly',
 #        'Consolidation', 'Edema', 'Enlarged Cardiomediastinum', 'Fracture',
@@ -40,7 +40,7 @@ gender = ['M', 'F']
 
 def main():
 
-    MODE = "test"  # Select "train" or "test", "Resume", "plot"
+    MODE = "train"  # Select "train" or "test", "Resume", "plot"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
