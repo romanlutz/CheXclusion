@@ -1,7 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 
-def PlotLearnignCurve():
+def PlotLearningCurve():
     LrCurv_param = torch.load('results/Saved_items')
     batch_size = LrCurv_param['batch_size']
     epoch_losses_train =LrCurv_param['epoch_losses_train']

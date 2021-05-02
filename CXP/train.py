@@ -16,16 +16,11 @@ from dataset import CheXpert
 from utils import *
 from batchiterator import *
 from tqdm import tqdm
-from ResNetModel import *
 import random
 import numpy as np
 
 
-
-def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR):
-
-
-
+def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device, LR, seed):
     # Training parameters
     batch_size = 48
 
@@ -42,9 +37,8 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
     train_df_size = len(train_df)
     print("Train_df path", train_df_size)
 
-    random_seed = 85 #random.randint(0,100)
-    np.random.seed(random_seed)
-    torch.manual_seed(random_seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -75,16 +69,7 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
 
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
-    
-    if ModelType == 'ResNet50':
-        model = ResNet50NN()
 
-    if ModelType == 'ResNet34':
-        model = ResNet34NN()
-
-    if ModelType == 'ResNet18':
-        model = ResNet18NN()
-        
 
     if ModelType == 'Resume':
         CheckPointData = torch.load('results/checkpoint')

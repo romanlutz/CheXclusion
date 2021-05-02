@@ -6,8 +6,6 @@ from scipy.misc import imread, imresize
 from PIL import Image
 
 
-
-
 class CheXpert(Dataset):
     def __init__(self, dataframe, path_image, finding="any", transform=None):
         self.dataframe = dataframe
@@ -16,6 +14,9 @@ class CheXpert(Dataset):
         self.finding = finding
         self.transform = transform
         self.path_image = path_image
+
+        if blob:
+            this.blob = blob
 
         if not finding == "any":  # can filter for positive findings of the kind described; useful for evaluation
             if finding in self.dataframe.columns:
@@ -44,8 +45,8 @@ class CheXpert(Dataset):
 
     def __getitem__(self, idx):
         item = self.dataframe.iloc[idx]
-
-        img = imread(os.path.join(self.path_image, item["Path"]))
+        img_path = os.path.join(self.path_image, item["Path"])
+        img = imread(imgpath)
         if len(img.shape) == 2:
             img = img[:, :, np.newaxis]
             img = np.concatenate([img, img, img], axis=2)

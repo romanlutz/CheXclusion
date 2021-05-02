@@ -16,7 +16,6 @@ from dataset import NIH
 from utils import *
 from batchiterator import *
 from tqdm import tqdm
-from ResNetModel import *
 import random
 import numpy as np
 
@@ -77,15 +76,6 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
 
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
-    
-    if ModelType == 'ResNet50':
-        model = ResNet50NN()
-
-    if ModelType == 'ResNet34':
-        model = ResNet34NN()
-
-    if ModelType == 'ResNet18':
-        model = ResNet18NN()
         
 
     if ModelType == 'Resume':

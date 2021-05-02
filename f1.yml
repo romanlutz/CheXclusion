@@ -1,0 +1,43 @@
+name: f1
+channels:
+  - pytorch
+  - conda-forge
+  - anaconda
+  - defaults
+dependencies:
+  - blas=1.0
+  - cudatoolkit=10.0.130
+  - cycler=0.10.0
+  - intel-openmp=2019.4
+  - joblib=0.13.2
+  - jpeg=9b
+  - matplotlib=3.1.0
+  - numpy=1.16.4
+  - pip=19.1.1
+  - python=3.6.8
+  - pytorch=1.1.0
+  - scikit-learn=0.21.2
+  - setuptools=41.0.1
+  - sip=4.18.1
+  - torchvision=0.3.0
+  - tqdm=4.31.1
+  - pip:
+    - backcall==0.1.0
+    - decorator==4.4.0
+    - ipython==7.5.0
+    - ipython-genutils==0.2.0
+    - jedi==0.13.3
+    - pandas==0.24.2
+    - parso==0.4.0
+    - pexpect==4.7.0
+    - pickleshare==0.7.5
+    - pillow==4.1.1
+    - prompt-toolkit==2.0.9
+    - ptyprocess==0.6.0
+    - pygments==2.4.2
+    - pytz==2019.1
+    - scipy==0.18.1
+    - traitlets==4.3.2
+    - wcwidth==0.1.7
+    - azureml-sdk==1.27.0
+

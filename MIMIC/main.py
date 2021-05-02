@@ -57,13 +57,13 @@ def main():
 
 
     if MODE == "train":
-        ModelType = "densenet"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "densenet"  # select 'densenet'
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
         model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
 
-        PlotLearnignCurve()
+        PlotLearningCurve()
 
 
     if MODE =="test":
@@ -74,16 +74,6 @@ def main():
         model = CheckPointData['model']
 
         make_pred_multilabel(model, test_df, val_df, path_image, device)
-
-
-    if MODE == "Resume":
-        ModelType = "Resume"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
-
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
-
-        PlotLearnignCurve()
 
     if MODE == "plot":
         TrueWithMeta = pd.read_csv("./True_withMeta.csv")

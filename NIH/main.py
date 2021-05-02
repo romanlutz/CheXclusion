@@ -42,13 +42,13 @@ def main():
     print("val_df path", val_df_size)
 
     if MODE == "train":
-        ModelType = "densenet"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "densenet"  # select 'densenet'
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
         model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
 
-        PlotLearnignCurve()
+        PlotLearningCurve()
 
 
     if MODE =="test":
@@ -60,15 +60,6 @@ def main():
 
         make_pred_multilabel(model, test_df, val_df, path_image, device)
 
-
-    if MODE == "Resume":
-        ModelType = "Resume"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
-
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, result_path, ModelType, CriterionType, device,LR)
-
-        PlotLearnignCurve()
 
     if MODE == "plot":
         gt = pd.read_csv("./results/True.csv")

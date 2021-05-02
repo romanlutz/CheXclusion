@@ -28,13 +28,13 @@ def main():
 
 
     if MODE == "train":
-        ModelType = "densenet"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "densenet"
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
         model, best_epoch = ModelTrain( ModelType, CriterionType, device,LR)
 
-        PlotLearnignCurve()
+        PlotLearningCurve()
 
 
     if MODE =="test":
@@ -44,23 +44,11 @@ def main():
 
         make_pred_multilabel(model, device)
 
-
-    if MODE == "Resume":
-        ModelType = "Resume"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
-
-        model, best_epoch = ModelTrain( ModelType, CriterionType, device,LR)
-
-        PlotLearnignCurve()
-
     if MODE == "plot":
         gt = pd.read_csv("./results/True.csv")
         pred = pd.read_csv("./results/bipred.csv")
         factor = [Sex, Age]
         factor_str = ['Sex', 'Age']
-
-
 
         # plot()
         for i in range(len(factor)):

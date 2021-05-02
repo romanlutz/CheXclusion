@@ -6,66 +6,67 @@ from predictions import *
 import pandas as pd
 from plot import *
 
-path_image = "../.."
+import argparse
+from azureml.core import Dataset, Run
+
+import tempfile
+import os
+import zipfile
+
+from sklearn.model_selection import GroupShuffleSplit
 
 
-train_df_path = "../../split_CXP/split_32/train_32.csv"
-test_df_path = "../../split_CXP/split_32/test_32.csv"
-val_df_path = "../../split_CXP/split_32/valid_32.csv"
+diseases = ['Lung Opacity', 'Atelectasis', 'Cardiomegaly',
+            'Consolidation', 'Edema', 'Enlarged Cardiomediastinum', 'Fracture',
+            'Lung Lesion', 'No Finding', 'Pleural Effusion', 'Pleural Other', 'Pneumonia',
+            'Pneumothorax', 'Support Devices']
 
-# diseases = ['Airspace Opacity', 'Atelectasis', 'Cardiomegaly',
-#        'Consolidation', 'Edema', 'Enlarged Cardiomediastinum', 'Fracture',
-#        'Lung Lesion', 'No Finding', 'Pleural Effusion', 'Pleural Other',
-#        'Pneumonia', 'Pneumothorax', 'Support Devices']
-
-
-diseases = ['Lung Opacity',  'Atelectasis', 'Cardiomegaly',
-            'Consolidation' , 'Edema',  'Enlarged Cardiomediastinum','Fracture',
-            'Lung Lesion','No Finding',  'Pleural Effusion', 'Pleural Other','Pneumonia',
-            'Pneumothorax', 'Support Devices' ]
-
-# diseases = ['Lung Opacity',  'Atelectasis', 'Cardiomegaly',
-#             'Consolidation' , 'Edema',  'Enlarged Cardiomediastinum','Fracture',
-#             'Lung Lesion',  'Pleural Effusion', 'Pleural Other','Pneumonia',
-#             'Pneumothorax', 'Support Devices' ]
-
-# diseases = ['No Finding','Lung Lesion',
-#        'Enlarged Cardiomediastinum', 'Cardiomegaly', 'Lung Opacity',
-#        'Lung Lesion', 'Edema', 'Consolidation', 'Pneumonia', 'Atelectasis',
-#        'Pneumothorax', 'Pleural Effusion', 'Pleural Other', 'Fracture',
-#        'Support Devices']
-# Age = ['0-20', '20-40', '40-60', '60-80', '80-']
 Age = ['60-80', '40-60', '20-40', '80-', '0-20']
 gender = ['M', 'F']
 
 def main():
 
-    MODE = "train"  # Select "train" or "test", "Resume", "plot"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, required=True)
+    parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--mode", type=str, default="train")
+    args = parser.parse_args()
+
+    run = Run.get_context()
+    ws = run.experiment.workspace
+
+    path_image = "../.."
+    seed = args.seed
+    train_df_path = f'split_{seed}/train_{seed}.csv'
+    test_df_path = f'split_{seed}/test_{seed}.csv'
+    val_df_path = f'split_{seed}/valid_{seed}.csv'
+
+    MODE = args.mode  # Select "train" or "test", "plot"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    val_df = pd.read_csv(val_df_path)
-    val_df_size = len(val_df)
-    print("Validation_df size:",val_df_size)
+    print(f"CPU/GPU selection: using {device}")
 
-    train_df = pd.read_csv(train_df_path)
-    train_df_size = len(train_df)
-    print("Train_df size", train_df_size)
-    
-    test_df = pd.read_csv(test_df_path)
-    test_df_size = len(test_df)
-    print("Test_df size", test_df_size)
+    # combine train and valid since we do our own splits
+    df_cxp_t = pd.read_csv('../CXP/train.csv')
+    df_cxp_v = pd.read_csv('../CXP/valid.csv')
+    df_cxp = pd.concat([df_cxp_t, df_cxp_v], ignore_index=True)
 
+    # extract patient id from path and make it a column
+    paths = list(df_cxp['Path'])             # path that includes patient00001
+    patient = [p.split('/')[2] for p in paths]     # patient00001
+    df_cxp.insert(0, 'PATIENT', patient)     # add 'Patient' PATIENT with patient00001
+
+    split_dataset(df_cxp, seed, run, train_df_path, test_df_path, val_df_path)
+    print("completed preprocessing and splitting dataset")
 
     if MODE == "train":
-        ModelType = "densenet"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "densenet"
         CriterionType = 'BCELoss'
         LR = 5e-5
 
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
+        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device, LR, seed)
 
-        PlotLearnignCurve()
-
+        PlotLearningCurve()
 
     if MODE =="test":
         val_df = pd.read_csv(val_df_path)
@@ -75,16 +76,6 @@ def main():
         model = CheckPointData['model']
 
         make_pred_multilabel(model, test_df, val_df, path_image, device)
-
-
-    if MODE == "Resume":
-        ModelType = "Resume"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
-        CriterionType = 'BCELoss'
-        LR = 0.1e-3
-
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
-
-        PlotLearnignCurve()
 
     if MODE == "plot":
         gt = pd.read_csv("./results/True.csv")
@@ -115,3 +106,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
+    # Split dataset into train and test/validation sets, then the latter into test and validation,
+    # but ensure that each patient only occurs in one of the three without any overlap.
+    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df_cxp, groups=df_cxp['PATIENT']))
+    X_tr = df_cxp.iloc[X_tr_idx]
+    X_testval = df_cxp.iloc[X_testval_idx]
+    
+    X_test_idx, X_val_idx = next(GroupShuffleSplit(test_size=.50, n_splits=2, random_state=seed).split(X_testval, groups=X_testval['PATIENT']))
+    X_test = X_testval.iloc[X_test_idx]
+    X_val = X_testval.iloc[X_val_idx]
+    
+    print('Seed ', seed)
+    print('Train ', X_tr.shape[0]/n)
+    print('Test ', X_test.shape[0]/n)
+    print('Valid ', X_val.shape[0]/n)
+    print()
+    
+    X_tr.to_csv(train_df_path)
+    X_test.to_csv(test_df_path)
+    X_val.to_csv(val_df_path)
+    run.upload_folder(name=f'split_{seed}', path=".")

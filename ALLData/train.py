@@ -17,7 +17,6 @@ from utils import *
 from batchiterator import *
 from tqdm import tqdm
 
-#from ResNetModel import ResNet50NN
 import random
 import numpy as np
 from Config import train_df, val_df
@@ -79,15 +78,6 @@ def ModelTrain(ModelType, CriterionType, device,LR):
 
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
-         
-    
-    if ModelType == 'ResNet50':
-#         model = models.resnet50(pretrained=True)
-#         num_ftrs = model.fc.in_features
-#         print(num_ftrs)
-#         print(N_LABELS)
-#         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
-        model = ResNet50NN()
     
     if ModelType == 'Resume':
         CheckPointData = torch.load('results/checkpoint')
