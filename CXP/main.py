@@ -147,9 +147,9 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     print('Valid ', X_val.shape[0]/n)
     print()
     
-    X_tr.to_csv(train_df_path)
-    X_test.to_csv(test_df_path)
-    X_val.to_csv(val_df_path)
+    X_tr.to_csv(train_df_path, mode='w')
+    X_test.to_csv(test_df_path, mode='w')
+    X_val.to_csv(val_df_path, mode='w')
     run.upload_folder(name=f'split_{seed}', path=".")
 
 
