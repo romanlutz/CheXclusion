@@ -7,9 +7,10 @@ import pandas as pd
 from plot import *
 
 import argparse
-from azureml.core import Dataset, Run
+from azureml.core import Dataset, Run, Workspace, Experiment
 
 import tempfile
+import time
 import os
 import zipfile
 
@@ -32,8 +33,21 @@ def main():
     parser.add_argument("--mode", type=str, default="train")
     args = parser.parse_args()
 
-    run = Run.get_context()
-    ws = run.experiment.workspace
+    SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")
+    RESOURCE_GROUP_NAME = os.getenv("RESOURCE_GROUP_NAME")
+    WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
+    if SUBSCRIPTION_ID is None or RESOURCE_GROUP_NAME is None or WORKSPACE_NAME is None:
+        # a remote run - context should be set
+        run = Run.get_context()
+        ws = run.experiment.workspace
+    else:
+        # a local run - obtain information from env vars and create run manually
+        ws = Workspace(subscription_id=SUBSCRIPTION_ID,
+                       resource_group=RESOURCE_GROUP_NAME,
+                       workspace_name=WORKSPACE_NAME)
+        experiment_name = f"{args.dataset}-{args.seed}-{int(time.time())}"
+        experiment = Experiment(workspace=ws, name=experiment_name)
+        run = experiment.start_logging()
 
     path_image = "../.."
     seed = args.seed
@@ -102,6 +116,8 @@ def main():
     #     for i in range(len(factor)):
     #         plot_14(pred, diseases, factor[i], factor_str[i])
     #         plot_Median(pred, diseases, factor[i], factor_str[i])
+
+    run.complete()
 
 
 if __name__ == "__main__":
