@@ -137,6 +137,7 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     X_test = X_testval.iloc[X_test_idx]
     X_val = X_testval.iloc[X_val_idx]
     
+    n = df.shape[0]
     print('Seed ', seed)
     print('Train ', X_tr.shape[0]/n)
     print('Test ', X_test.shape[0]/n)
