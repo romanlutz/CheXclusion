@@ -40,13 +40,14 @@ def main():
     SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")
     RESOURCE_GROUP_NAME = os.getenv("RESOURCE_GROUP_NAME")
     WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
-    if SUBSCRIPTION_ID is None or RESOURCE_GROUP_NAME is None or WORKSPACE_NAME is None:
+    TENANT_ID = os.getenv("TENANT_ID")
+    if SUBSCRIPTION_ID is None or RESOURCE_GROUP_NAME is None or WORKSPACE_NAME is None or TENANT_ID is None:
         # a remote run - context should be set
         run = Run.get_context()
         ws = run.experiment.workspace
     else:
         # a local run - obtain information from env vars and create run manually
-        auth = InteractiveLoginAuthentication()
+        auth = InteractiveLoginAuthentication(tenant_id=TENANT_ID)
         ws = Workspace(subscription_id=SUBSCRIPTION_ID,
                        resource_group=RESOURCE_GROUP_NAME,
                        workspace_name=WORKSPACE_NAME,
