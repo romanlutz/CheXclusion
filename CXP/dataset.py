@@ -15,9 +15,6 @@ class CheXpert(Dataset):
         self.transform = transform
         self.path_image = path_image
 
-        if blob:
-            this.blob = blob
-
         if not finding == "any":  # can filter for positive findings of the kind described; useful for evaluation
             if finding in self.dataframe.columns:
                 if len(self.dataframe[self.dataframe[finding] == 1]) > 0:
