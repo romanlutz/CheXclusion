@@ -129,9 +129,9 @@ def main():
 def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
-    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df_cxp, groups=df_cxp['PATIENT']))
-    X_tr = df_cxp.iloc[X_tr_idx]
-    X_testval = df_cxp.iloc[X_testval_idx]
+    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['PATIENT']))
+    X_tr = df.iloc[X_tr_idx]
+    X_testval = df.iloc[X_testval_idx]
     
     X_test_idx, X_val_idx = next(GroupShuffleSplit(test_size=.50, n_splits=2, random_state=seed).split(X_testval, groups=X_testval['PATIENT']))
     X_test = X_testval.iloc[X_test_idx]
