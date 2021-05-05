@@ -126,11 +126,6 @@ def main():
 
     run.complete()
 
-
-if __name__ == "__main__":
-    main()
-
-
 def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
@@ -152,3 +147,7 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     X_test.to_csv(test_df_path)
     X_val.to_csv(val_df_path)
     run.upload_folder(name=f'split_{seed}', path=".")
+
+
+if __name__ == "__main__":
+    main()
