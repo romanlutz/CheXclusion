@@ -10,7 +10,7 @@ import argparse
 from azureml.core import Dataset, Run, Workspace, Experiment
 from azureml.core.authentication import InteractiveLoginAuthentication
 
-
+import shutil
 import tempfile
 import time
 import os
@@ -56,11 +56,14 @@ def main():
         experiment = Experiment(workspace=ws, name=experiment_name)
         run = experiment.start_logging()
 
-    path_image = "../.."
+    path_image = "../CXP"
     seed = args.seed
-    train_df_path = f'split_{seed}/train_{seed}.csv'
-    test_df_path = f'split_{seed}/test_{seed}.csv'
-    val_df_path = f'split_{seed}/valid_{seed}.csv'
+    path_split = f'{path_image}/split_{seed}'
+    train_df_path = f'{path_split}/train_{seed}.csv'
+    test_df_path = f'{path_split}/test_{seed}.csv'
+    val_df_path = f'{path_split}/valid_{seed}.csv'
+
+    os.makedirs(os.path.join(path_split))
 
     MODE = args.mode  # Select "train" or "test", "plot"
 
