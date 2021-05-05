@@ -8,6 +8,8 @@ from plot import *
 
 import argparse
 from azureml.core import Dataset, Run, Workspace, Experiment
+from azureml.core.authentication import InteractiveLoginAuthentication
+
 
 import tempfile
 import time
@@ -33,6 +35,8 @@ def main():
     parser.add_argument("--mode", type=str, default="train")
     args = parser.parse_args()
 
+    # to run locally create a .sh file with the following three env vars and run
+    # source ./setenv.sh
     SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")
     RESOURCE_GROUP_NAME = os.getenv("RESOURCE_GROUP_NAME")
     WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
@@ -42,9 +46,11 @@ def main():
         ws = run.experiment.workspace
     else:
         # a local run - obtain information from env vars and create run manually
+        auth = InteractiveLoginAuthentication()
         ws = Workspace(subscription_id=SUBSCRIPTION_ID,
                        resource_group=RESOURCE_GROUP_NAME,
-                       workspace_name=WORKSPACE_NAME)
+                       workspace_name=WORKSPACE_NAME,
+                       auth=auth)
         experiment_name = f"{args.dataset}-{args.seed}-{int(time.time())}"
         experiment = Experiment(workspace=ws, name=experiment_name)
         run = experiment.start_logging()
