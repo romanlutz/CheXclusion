@@ -57,8 +57,9 @@ def main():
         run = experiment.start_logging()
 
     path_image = ".."
+    path_cxp_image = f'{path_image}/CheXpert-v1.0'
     seed = args.seed
-    path_split = f'{path_image}/CheXpert-v1.0/split_{seed}'
+    path_split = f'{path_cxp_image}/split_{seed}'
     train_df_path = f'{path_split}/train_{seed}.csv'
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
@@ -72,8 +73,8 @@ def main():
     print(f"CPU/GPU selection: using {device}")
 
     # combine train and valid since we do our own splits
-    df_cxp_t = pd.read_csv('../CXP/train.csv')
-    df_cxp_v = pd.read_csv('../CXP/valid.csv')
+    df_cxp_t = pd.read_csv(f'{path_cxp_image}/train.csv')
+    df_cxp_v = pd.read_csv(f'{path_cxp_image}/valid.csv')
     df_cxp = pd.concat([df_cxp_t, df_cxp_v], ignore_index=True)
 
     # extract patient id from path and make it a column
