@@ -56,9 +56,9 @@ def main():
         experiment = Experiment(workspace=ws, name=experiment_name)
         run = experiment.start_logging()
 
-    path_image = "../CXP"
+    path_image = ".."
     seed = args.seed
-    path_split = f'{path_image}/split_{seed}'
+    path_split = f'{path_image}/CheXpert-v1.0/split_{seed}'
     train_df_path = f'{path_split}/train_{seed}.csv'
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
