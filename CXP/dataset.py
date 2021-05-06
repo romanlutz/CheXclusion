@@ -43,7 +43,7 @@ class CheXpert(Dataset):
     def __getitem__(self, idx):
         item = self.dataframe.iloc[idx]
         img_path = os.path.join(self.path_image, item["Path"])
-        img = imread(imgpath)
+        img = imread(img_path)
         if len(img.shape) == 2:
             img = img[:, :, np.newaxis]
             img = np.concatenate([img, img, img], axis=2)
