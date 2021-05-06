@@ -63,7 +63,8 @@ def main():
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
 
-    os.makedirs(os.path.join(path_split))
+    if not os.path.exists(os.path.join(path_split)):
+        os.makedirs(os.path.join(path_split))
 
     MODE = args.mode  # Select "train" or "test", "plot"
 
@@ -147,9 +148,6 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     print('Valid ', X_val.shape[0]/n)
     print()
     
-    os.remove(train_df_path)
-    os.remove(test_df_path)
-    os.remove(val_df_path)
     X_tr.to_csv(train_df_path, mode='w')
     X_test.to_csv(test_df_path, mode='w')
     X_val.to_csv(val_df_path, mode='w')
