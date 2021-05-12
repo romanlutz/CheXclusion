@@ -43,7 +43,6 @@ class NIH(Dataset):
     def __getitem__(self, idx):
         item = self.dataframe.iloc[idx]
 
-        print(item)
         img = imread(os.path.join(self.path_image, item["path"]))
         
         
