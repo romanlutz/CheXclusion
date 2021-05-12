@@ -136,9 +136,12 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     run.upload_folder(name=f'split_{seed}', path=".")
 
 def preprocess_NIH(df):
-
+    total_label_count = df['Finding Labels'].apply(lambda labels: 0)
     for disease in diseases:
         df[disease] = df['Finding Labels'].apply(lambda labels: 1 if disease in labels else 0)
+        total_label_count += df[disease]
+    
+    assert (total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))).all()
     
     print(df.head(n=100))
 
