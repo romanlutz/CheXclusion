@@ -9,14 +9,13 @@ def BatchIterator(model, phase,
         optimizer,
         device):
 
-
     # --------------------  Initial parameters
     grad_clip = 0.5  # clip gradients at an absolute value of
 
     print_freq = 1000
     running_loss = 0.0
 
-    
+    print("BatchIterator starting to read images now.")
     for i, data in enumerate(Data_loader):
         imgs, labels, _ = data
 
