@@ -17,6 +17,7 @@ def BatchIterator(model, phase,
 
     print("BatchIterator starting to read images now.")
     for i, data in enumerate(Data_loader):
+        print("Reading batch " + str(i))
         imgs, labels, _ = data
 
         batch_size = imgs.shape[0]
@@ -24,6 +25,7 @@ def BatchIterator(model, phase,
         labels = labels.to(device)
 
         if phase == "train":
+            print("Starting model training on batch " + str(i))
             optimizer.zero_grad()
             model.train()
             outputs = model(imgs)
@@ -33,6 +35,7 @@ def BatchIterator(model, phase,
                 outputs = model(imgs)
 
         loss = criterion(outputs, labels)
+        print("Loss: " + str(loss))
 
         if phase == 'train':
 
@@ -40,6 +43,7 @@ def BatchIterator(model, phase,
             if grad_clip is not None:
                 clip_gradient(optimizer, grad_clip)
             optimizer.step()  # update weights
+            print("Finished model training on batch " + str(i))
 
         running_loss += loss * batch_size
         if (i % 10 == 0):
