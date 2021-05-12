@@ -148,9 +148,9 @@ def preprocess_NIH(df):
 
     print(df.head(n=100))
 
-    print(df.where(total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))))
+    print(df[total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")) - 1 * ("No Finding" in labels))])
 
-    assert (total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))).all()
+    assert (total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")) - 1 * ("No Finding" in labels))).all()
 
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
