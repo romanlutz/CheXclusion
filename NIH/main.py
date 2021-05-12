@@ -156,6 +156,7 @@ def preprocess_NIH(df):
     df['Sex'] = df['Patient Gender'] 
     df['Age'] = df['Patient Age']
     df = df.drop(columns=["Patient Gender", 'Patient Age'])
+    print(df.head())
 
     return df
 
