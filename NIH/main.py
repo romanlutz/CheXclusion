@@ -108,6 +108,28 @@ def main():
 
     #         plot_Median(pred, diseases, factor[i], factor_str[i])
 
+def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
+    # Split dataset into train and test/validation sets, then the latter into test and validation,
+    # but ensure that each patient only occurs in one of the three without any overlap.
+    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['Patient ID']))
+    X_tr = df.iloc[X_tr_idx]
+    X_testval = df.iloc[X_testval_idx]
+    
+    X_test_idx, X_val_idx = next(GroupShuffleSplit(test_size=.50, n_splits=2, random_state=seed).split(X_testval, groups=X_testval['Patient ID']))
+    X_test = X_testval.iloc[X_test_idx]
+    X_val = X_testval.iloc[X_val_idx]
+    
+    n = df.shape[0]
+    print('Seed ', seed)
+    print('Train ', X_tr.shape[0]/n)
+    print('Test ', X_test.shape[0]/n)
+    print('Valid ', X_val.shape[0]/n)
+    print()
+    
+    X_tr.to_csv(train_df_path, mode='w')
+    X_test.to_csv(test_df_path, mode='w')
+    X_val.to_csv(val_df_path, mode='w')
+    run.upload_folder(name=f'split_{seed}', path=".")
 
 if __name__ == "__main__":
     main()
