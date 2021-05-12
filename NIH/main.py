@@ -112,6 +112,7 @@ def main():
     #         plot_Median(pred, diseases, factor[i], factor_str[i])
 
 def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
+    df = preprocess_NIH(df)
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
     X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['Patient ID']))
@@ -133,6 +134,29 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     X_test.to_csv(test_df_path, mode='w')
     X_val.to_csv(val_df_path, mode='w')
     run.upload_folder(name=f'split_{seed}', path=".")
+
+def preprocess_NIH(df):
+    # custom step to rename Image Index to path
+    df.rename({"Image Index": "path"}, inplace=True)
+
+    df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
+    df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
+    df['Patient Age'] = np.where(df['Patient Age'].between(40,59), 59, df['Patient Age'])
+    df['Patient Age'] = np.where(df['Patient Age'].between(60,79), 79, df['Patient Age'])
+    df['Patient Age'] = np.where(df['Patient Age']>=80, 81, df['Patient Age'])
+    
+    copy_subjectid = df['Patient ID'] 
+    df.drop(columns = ['Patient ID'])
+    
+    df = df.replace([[None], -1, "[False]", "[True]", "[ True]", 19, 39, 59, 79, 81], 
+                     [0, 0, 0, 1, 1, "0-20", "20-40", "40-60", "60-80", "80-"])
+   
+    df['subject_id'] = copy_subjectid
+    df['Sex'] = df['Patient Gender'] 
+    df['Age'] = df['Patient Age']
+    df = df.drop(columns=["Patient Gender", 'Patient Age'])
+
+    return df
 
 if __name__ == "__main__":
     main()

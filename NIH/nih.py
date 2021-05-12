@@ -137,9 +137,6 @@ def plot_TPR_NIH(df, diseases, category, category_name):
     return final
 
 
-
-
-
 def preprocess(split):
     details = pd.read_csv("preprocessed.csv")
     if 'Cardiomegaly' in split.columns:
@@ -156,32 +153,6 @@ def preprocess(split):
     split = split.replace([[None], -1, "[False]", "[True]", "[ True]", 19, 39, 59, 79, 81], 
                             [0, 0, 0, 1, 1, "0-20", "20-40", "40-60", "60-80", "80-"])
     return split
-
-def random_split(split_portion):
-    df = pd.read_csv("/scratch/gobi2/projects/ml4h/datasets/NIH/preprocessed.csv")
-    total_patient_id = pd.unique(df['Patient ID'])
-    total_patient_id = pd.DataFrame(data=total_patient_id, columns=['Patient ID'])
-    total_patient_id['random_number'] = np.random.uniform(size=len(total_patient_id))
-
-    train_id = total_patient_id[total_patient_id['random_number'] <= split_portion[0]]
-    valid_id = total_patient_id[(total_patient_id['random_number'] > split_portion[0]) & (total_patient_id['random_number'] <= split_portion[1])]
-    test_id = total_patient_id[total_patient_id['random_number'] > split_portion[1]]
-
-    train_id = train_id.drop(columns=['random_number'])
-    valid_id = valid_id.drop(columns=['random_number'])
-    test_id = test_id.drop(columns=['random_number'])
-
-    train_df = train_id.merge(df, left_on="Patient ID", right_on="Patient ID")
-    valid_df = valid_id.merge(df, left_on="Patient ID", right_on="Patient ID")
-    test_df = test_id.merge(df, left_on="Patient ID", right_on="Patient ID")
-
-    print(len(train_df))
-    print(len(valid_df))
-    print(len(test_df))
-
-    train_df.to_csv("new_train.csv", index=False)
-    valid_df.to_csv("new_valid.csv", index=False)
-    test_df.to_csv("new_test.csv", index=False)
 
 def count(list1, l, r): 
     c = 0 
