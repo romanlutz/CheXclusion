@@ -12,6 +12,7 @@ from predictions import *
 from nih import *
 
 import pandas as pd
+from sklearn.model_selection import GroupShuffleSplit
 
 #---------------------- on q
 path_image = "NIH/"
