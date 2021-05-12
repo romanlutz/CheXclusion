@@ -10,11 +10,8 @@ import argparse
 from azureml.core import Dataset, Run, Workspace, Experiment
 from azureml.core.authentication import InteractiveLoginAuthentication
 
-import shutil
-import tempfile
 import time
 import os
-import zipfile
 
 from sklearn.model_selection import GroupShuffleSplit
 
