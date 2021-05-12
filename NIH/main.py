@@ -137,9 +137,6 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     run.upload_folder(name=f'split_{seed}', path=".")
 
 def preprocess_NIH(df):
-    # custom step to rename Image Index to path
-    df.rename({"Image Index": "path"}, inplace=True)
-
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(40,59), 59, df['Patient Age'])
@@ -153,9 +150,7 @@ def preprocess_NIH(df):
                      [0, 0, 0, 1, 1, "0-20", "20-40", "40-60", "60-80", "80-"])
    
     df['subject_id'] = copy_subjectid
-    df['Sex'] = df['Patient Gender'] 
-    df['Age'] = df['Patient Age']
-    df = df.drop(columns=["Patient Gender", 'Patient Age'])
+    df.rename(columns={"Image Index": "path", "Patient Gender": "Sex", "Patient Age": "Age"}, inplace=True)
     print(df.head())
 
     return df
