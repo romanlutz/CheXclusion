@@ -139,6 +139,8 @@ def preprocess_NIH(df):
     # custom step to rename Image Index to path
     df.rename({"Image Index": "path"}, inplace=True)
 
+    df = df.astype({"Patient ID": int})
+
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(40,59), 59, df['Patient Age'])
