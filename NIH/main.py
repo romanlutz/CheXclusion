@@ -140,10 +140,12 @@ def preprocess_NIH(df):
     for disease in diseases:
         df[disease] = df['Finding Labels'].apply(lambda labels: 1 if disease in labels else 0)
         total_label_count += df[disease]
-    
-    assert (total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))).all()
-    
+
     print(df.head(n=100))
+
+    print(df.where(total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))))
+
+    assert (total_label_count == df['Finding Labels'].apply(lambda labels: len(labels.split("|")))).all()
 
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
