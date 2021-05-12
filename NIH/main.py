@@ -138,7 +138,7 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
 def preprocess_NIH(df):
 
     for disease in diseases:
-        df[disease] = np.where(df['Finding Labels'].str.contains(disease), 1, df['Finding Labels'])
+        df[disease] = df['Finding Labels'].apply(lambda labels: 1 if disease in labels else 0)
     
     print(df.head(n=100))
 
