@@ -60,12 +60,12 @@ def main():
     path_image = ".."
     path_nih_image = f'{path_image}/NIH'
     seed = args.seed
-    path_split = f'{path_cxp_image}/split_{seed}'
+    path_split = f'{path_nih_image}/split_{seed}'
     train_df_path = f'{path_split}/train_{seed}.csv'
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
 
-    df_nih = pd.read_excel(f'{path_cxp_image}/Data_Entry_2017_v2020.csv')
+    df_nih = pd.read_excel(f'{path_nih_image}/Data_Entry_2017_v2020.csv')
 
     if not os.path.exists(os.path.join(path_split)):
         os.makedirs(os.path.join(path_split))
