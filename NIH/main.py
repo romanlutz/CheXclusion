@@ -84,7 +84,7 @@ def main():
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
+        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_nih_image, ModelType, CriterionType, device,LR)
 
         PlotLearningCurve()
 
@@ -96,7 +96,7 @@ def main():
         CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
 
-        make_pred_multilabel(model, test_df, val_df, path_image, device)
+        make_pred_multilabel(model, test_df, val_df, path_nih_image, device)
 
     if MODE == "plot":
         gt = pd.read_csv("./results/True.csv")
@@ -113,7 +113,6 @@ def main():
 
 def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     df = preprocess_NIH(df)
-    print(df.head())
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
     X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['subject_id']))
@@ -151,7 +150,6 @@ def preprocess_NIH(df):
    
     df['subject_id'] = copy_subjectid
     df.rename(columns={"Image Index": "path", "Patient Gender": "Sex", "Patient Age": "Age"}, inplace=True)
-    print(df.head())
 
     return df
 
