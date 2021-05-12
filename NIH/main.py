@@ -136,6 +136,12 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     run.upload_folder(name=f'split_{seed}', path=".")
 
 def preprocess_NIH(df):
+
+    for disease in diseases:
+        df[disease] = np.where(df['Finding Labels'].str.contains(disease), 1, df['Finding Labels'])
+    
+    print(df.head(n=100))
+
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(40,59), 59, df['Patient Age'])
