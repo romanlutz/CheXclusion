@@ -113,6 +113,7 @@ def main():
 
 def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     df = preprocess_NIH(df)
+    print(df.head())
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
     X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['subject_id']))
