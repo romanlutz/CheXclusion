@@ -58,12 +58,14 @@ def main():
         run = experiment.start_logging()
 
     path_image = ".."
-    path_cxp_image = f'{path_image}/CheXpert-v1.0'
+    path_nih_image = f'{path_image}/NIH'
     seed = args.seed
     path_split = f'{path_cxp_image}/split_{seed}'
     train_df_path = f'{path_split}/train_{seed}.csv'
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
+
+    df_nih = pd.read_excel(f'{path_cxp_image}/Data_Entry_2017_v2020.csv')
 
     if not os.path.exists(os.path.join(path_split)):
         os.makedirs(os.path.join(path_split))
@@ -73,7 +75,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"CPU/GPU selection: using {device}")
 
-    split_dataset(df_cxp, seed, run, train_df_path, test_df_path, val_df_path)
+    split_dataset(df_nih, seed, run, train_df_path, test_df_path, val_df_path)
     print("completed preprocessing and splitting dataset")
 
     if MODE == "train":
