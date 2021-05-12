@@ -43,7 +43,7 @@ class NIH(Dataset):
     def __getitem__(self, idx):
         item = self.dataframe.iloc[idx]
 
-        img = imread(os.path.join(self.path_image, item["Image Index"]))
+        img = imread(os.path.join(self.path_image, item["path"]))
         
         
         if len(img.shape) == 2:
@@ -77,8 +77,7 @@ class NIH(Dataset):
 #                     label[i] = self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float')
 #-------------------------------------------------------------------------
             
-        return img, label, item["Image Index"]
+        return img, label, item["path"]
 
     def __len__(self):
         return self.dataset_size
-

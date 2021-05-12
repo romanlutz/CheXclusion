@@ -141,7 +141,7 @@ def plot_TPR_NIH(df, diseases, category, category_name):
 
 
 def preprocess(split):
-    details = pd.read_csv("/scratch/gobi2/projects/ml4h/datasets/NIH/preprocessed.csv")
+    details = pd.read_csv("preprocessed.csv")
     if 'Cardiomegaly' in split.columns:
         split = split.drop(columns=['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema',
        'Effusion', 'Emphysema', 'Fibrosis', 'Hernia', 'Infiltration', 'Mass',
@@ -411,5 +411,4 @@ def plot_sort_median(df, diseases, category, category_name):
     df = df_copy
 
     plot_median(df, diseases, category, category_name)
-
 

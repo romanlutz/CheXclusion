@@ -2,13 +2,6 @@
 import torch
 from utils import *
 import numpy as np
-#from evaluation import *
-
-
-
-
-
-
 
 def BatchIterator(model, phase,
         Data_loader,
@@ -17,7 +10,7 @@ def BatchIterator(model, phase,
         device):
 
 
-    # --------------------  Initial paprameterd
+    # --------------------  Initial parameters
     grad_clip = 0.5  # clip gradients at an absolute value of
 
     print_freq = 1000
@@ -25,8 +18,6 @@ def BatchIterator(model, phase,
 
     
     for i, data in enumerate(Data_loader):
-
-
         imgs, labels, _ = data
 
         batch_size = imgs.shape[0]
@@ -38,11 +29,9 @@ def BatchIterator(model, phase,
             model.train()
             outputs = model(imgs)
         else:
-
             model.eval()
             with torch.no_grad():
                 outputs = model(imgs)
-
 
         loss = criterion(outputs, labels)
 
@@ -54,10 +43,7 @@ def BatchIterator(model, phase,
             optimizer.step()  # update weights
 
         running_loss += loss * batch_size
-        if (i % 200 == 0):
-            print(str(i * batch_size))
-
-
-
+        if (i % 10 == 0):
+            print("Read " + str(i * batch_size) + " images.")
 
     return running_loss

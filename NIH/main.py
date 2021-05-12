@@ -4,16 +4,15 @@ from train import *
 from LearningCurve import *
 from predictions import *
 from nih import *
-from Actual_TPR import Actual_TPR
 
 import pandas as pd
 
 #---------------------- on q
-path_image = "/scratch/gobi2/projects/ml4h/datasets/NIH/images/"
+path_image = "NIH/"
 
-train_df_path ="/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/train.csv"
-test_df_path = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/test.csv"
-val_df_path = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/valid.csv"
+train_df_path ="train.csv"
+test_df_path = "test.csv"
+val_df_path = "valid.csv"
 
 
 diseases = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema',
@@ -25,21 +24,51 @@ gender = ['M', 'F']
 
 def main():
 
-    MODE = "plot"  # Select "train" or "test", "Resume", "plot", "Threshold", "plot15"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, required=True)
+    parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--mode", type=str, default="train")
+    args = parser.parse_args()
+
+    # to run locally create a .sh file with the following three env vars and run
+    # source ./setenv.sh
+    SUBSCRIPTION_ID = os.getenv("SUBSCRIPTION_ID")
+    RESOURCE_GROUP_NAME = os.getenv("RESOURCE_GROUP_NAME")
+    WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
+    TENANT_ID = os.getenv("TENANT_ID")
+    if SUBSCRIPTION_ID is None or RESOURCE_GROUP_NAME is None or WORKSPACE_NAME is None or TENANT_ID is None:
+        # a remote run - context should be set
+        run = Run.get_context()
+        ws = run.experiment.workspace
+    else:
+        # a local run - obtain information from env vars and create run manually
+        auth = InteractiveLoginAuthentication(tenant_id=TENANT_ID)
+        ws = Workspace(subscription_id=SUBSCRIPTION_ID,
+                       resource_group=RESOURCE_GROUP_NAME,
+                       workspace_name=WORKSPACE_NAME,
+                       auth=auth)
+        experiment_name = f"{args.dataset}-{args.seed}-{int(time.time())}"
+        experiment = Experiment(workspace=ws, name=experiment_name)
+        run = experiment.start_logging()
+
+    path_image = ".."
+    path_cxp_image = f'{path_image}/CheXpert-v1.0'
+    seed = args.seed
+    path_split = f'{path_cxp_image}/split_{seed}'
+    train_df_path = f'{path_split}/train_{seed}.csv'
+    test_df_path = f'{path_split}/test_{seed}.csv'
+    val_df_path = f'{path_split}/valid_{seed}.csv'
+
+    if not os.path.exists(os.path.join(path_split)):
+        os.makedirs(os.path.join(path_split))
+
+    MODE = "train"  # Select "train" or "test", "Resume", "plot", "Threshold", "plot15"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"CPU/GPU selection: using {device}")
 
-    train_df = pd.read_csv(train_df_path)
-    train_df_size = len(train_df)
-    print("Train_df path", train_df_size)
-
-    test_df = pd.read_csv(test_df_path)
-    test_df_size = len(test_df)
-    print("test_df path", test_df_size)
-
-    val_df = pd.read_csv(val_df_path)
-    val_df_size = len(val_df)
-    print("val_df path", val_df_size)
+    split_dataset(df_cxp, seed, run, train_df_path, test_df_path, val_df_path)
+    print("completed preprocessing and splitting dataset")
 
     if MODE == "train":
         ModelType = "densenet"  # select 'densenet'
@@ -59,7 +88,6 @@ def main():
         model = CheckPointData['model']
 
         make_pred_multilabel(model, test_df, val_df, path_image, device)
-
 
     if MODE == "plot":
         gt = pd.read_csv("./results/True.csv")
