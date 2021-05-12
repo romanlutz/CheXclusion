@@ -65,7 +65,7 @@ def main():
     test_df_path = f'{path_split}/test_{seed}.csv'
     val_df_path = f'{path_split}/valid_{seed}.csv'
 
-    df_nih = pd.read_excel(f'{path_nih_image}/Data_Entry_2017_v2020.xls')
+    df_nih = pd.read_csv(f'{path_nih_image}/Data_Entry_2017_v2020.csv')
 
     if not os.path.exists(os.path.join(path_split)):
         os.makedirs(os.path.join(path_split))
