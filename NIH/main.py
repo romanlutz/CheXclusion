@@ -115,11 +115,11 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
     df = preprocess_NIH(df)
     # Split dataset into train and test/validation sets, then the latter into test and validation,
     # but ensure that each patient only occurs in one of the three without any overlap.
-    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['Patient ID']))
+    X_tr_idx, X_testval_idx = next(GroupShuffleSplit(test_size=.20, n_splits=2, random_state=seed).split(df, groups=df['subject_id']))
     X_tr = df.iloc[X_tr_idx]
     X_testval = df.iloc[X_testval_idx]
     
-    X_test_idx, X_val_idx = next(GroupShuffleSplit(test_size=.50, n_splits=2, random_state=seed).split(X_testval, groups=X_testval['Patient ID']))
+    X_test_idx, X_val_idx = next(GroupShuffleSplit(test_size=.50, n_splits=2, random_state=seed).split(X_testval, groups=X_testval['subject_id']))
     X_test = X_testval.iloc[X_test_idx]
     X_val = X_testval.iloc[X_val_idx]
     
@@ -138,8 +138,6 @@ def split_dataset(df, seed, run, train_df_path, test_df_path, val_df_path):
 def preprocess_NIH(df):
     # custom step to rename Image Index to path
     df.rename({"Image Index": "path"}, inplace=True)
-
-    df = df.astype({"Patient ID": int})
 
     df['Patient Age'] = np.where(df['Patient Age'].between(0,19), 19, df['Patient Age'])
     df['Patient Age'] = np.where(df['Patient Age'].between(20,39), 39, df['Patient Age'])
